@@ -1,0 +1,22 @@
+.admin-stats {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.admin-stats h2 {
+  color: #6a0dad;
+  margin-bottom: 10px;
+}
+
+.admin-stats p {
+  font-size: 18px;
+  color: #333;
+}
+
+.admin-stats span {
+  font-weight: bold;
+  color: #6a0dad;
+}

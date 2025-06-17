@@ -1,0 +1,257 @@
+/* Fullscreen background */
+.login-page {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: black;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  height: 60px;
+  padding: 0 2rem;
+  background: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.navbar-left {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid #ffffffaa;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-btn.signup {
+  background-color: #00cc66;
+  color: black;
+  border: none;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Content layout */
+.content {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.background-text {
+  width: 50%;
+  color: white;
+  padding: 2rem;
+  font-size: 1.3rem;
+}
+
+.background-text h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.platform {
+  font-weight: bold;
+  margin-top: 1.5rem;
+  color: #66ff99;
+}
+
+/* Form */
+.form-container {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.login-form {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 350px;
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.4);
+}
+
+.login-form h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.login-form input {
+  width: 100%;
+  margin: 0.6rem 0;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.login-form input::placeholder {
+  color: #ccc;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #00cc66;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #00b359;
+}
+
+.login-form a {
+  color: #66ffcc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-form p {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Animated background */
+.animated-lines {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.animated-lines.green::before,
+.animated-lines.green::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(0, 255, 128, 0.4) 0px,
+    rgba(0, 255, 128, 0.4) 2px,
+    transparent 2px,
+    transparent 40px
+  );
+  animation: moveLines 15s linear infinite;
+}
+
+.animated-lines.green::after {
+  transform: rotate(180deg);
+  animation-delay: 7.5s;
+}
+
+.animated-lines.blue::before,
+.animated-lines.blue::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(0, 128, 255, 0.4) 0px,
+    rgba(0, 128, 255, 0.4) 2px,
+    transparent 2px,
+    transparent 40px
+  );
+  animation: moveLines 15s linear infinite;
+}
+
+.animated-lines.blue::after {
+  transform: rotate(180deg);
+  animation-delay: 7.5s;
+}
+
+@keyframes moveLines {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(40px, 40px);
+  }
+}
+
+/* Success and error alerts */
+.success-alert {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #28a745;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.error-alert {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #dc3545;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Light mode body background */
+body.light-mode {
+  background: white;
+  color: #222;
+}
