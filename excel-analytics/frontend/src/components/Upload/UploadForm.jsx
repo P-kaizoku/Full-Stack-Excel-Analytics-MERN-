@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UploadForm.css";
 
-export default function UploadForm({ onDataLoaded }) {
+export default function UploadForm() {
   const [file, setFile] = useState(null);
   const [xAxis, setXAxis] = useState("");
   const [yAxis, setYAxis] = useState("");
   const [chartType, setChartType] = useState("2d");
   const [status, setStatus] = useState("");
+  const [headers, setHeaders] = useState([]);
+  const [cleanedData, setCleanedData] = useState([]);
 
   useEffect(() => {
     const canvas = document.getElementById("matrix-canvas");
@@ -25,14 +27,12 @@ export default function UploadForm({ onDataLoaded }) {
     const drawMatrix = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = "#00ff00";
-      ctx.font = `${fontSize}px monospace`; // ✅ Fixed interpolation
+      ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
@@ -44,32 +44,61 @@ export default function UploadForm({ onDataLoaded }) {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("xAxis", xAxis);
-    formData.append("yAxis", yAxis);
-    formData.append("chartType", chartType);
 
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/upload", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ Fixed
-          "Content-Type": "multipart/form-data",
-        },
+      const res = await axios.post(
+        "http://localhost:5000/api/upload",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const rawData = res.data.data;
+      const cleaned = rawData.map((row) => {
+        const cleanedRow = {};
+        for (let key in row) cleanedRow[key.trim()] = row[key];
+        return cleanedRow;
       });
 
-      onDataLoaded?.(res.data.data, xAxis, yAxis, chartType); // ✅ Adjusted
-      setStatus("✅ Upload successful!");
+      setCleanedData(cleaned);
+      setHeaders(Object.keys(cleaned[0] || []));
+      setStatus("✅ File uploaded. Now choose X & Y axes.");
     } catch (err) {
       console.error("Upload Error:", err.response?.data || err.message);
-      setStatus("❌ Upload failed. Please try again.");
+      setStatus("❌ Upload failed.");
     }
+  };
+
+  const handleAnalyze = () => {
+    if (!xAxis || !yAxis || cleanedData.length === 0) {
+      setStatus("⚠️ Please select both axes.");
+      return;
+    }
+
+    const payload = {
+      data: cleanedData,
+      xKey: xAxis,
+      yKey: yAxis,
+      chartType: chartType,
+    };
+
+    localStorage.setItem("chartData", JSON.stringify(payload));
+    setStatus("✅ Ready! Redirecting to analysis...");
+    setTimeout(() => {
+      window.location.href = "/analyze";
+    }, 800);
   };
 
   return (
@@ -78,33 +107,56 @@ export default function UploadForm({ onDataLoaded }) {
 
       <div className="form-content">
         <div className="upload-description floating-text">
-          Upload, visualize, and transform your spreadsheets into interactive charts and reports with just a few clicks.
+          Upload, visualize, and transform your spreadsheets into interactive
+          charts and reports with just a few clicks.
         </div>
 
         <div className="upload-card user-history">
           <h2>📂 Upload Excel File</h2>
-          <form className="upload-form" onSubmit={handleSubmit}>
-            <input type="file" accept=".xlsx, .xls" onChange={(e) => setFile(e.target.files[0])} required />
+
+          <form className="upload-form" onSubmit={handleUpload}>
             <input
-              type="text"
-              placeholder="X-Axis Column"
-              value={xAxis}
-              onChange={(e) => setXAxis(e.target.value)}
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={(e) => setFile(e.target.files[0])}
               required
             />
-            <input
-              type="text"
-              placeholder="Y-Axis Column"
-              value={yAxis}
-              onChange={(e) => setYAxis(e.target.value)}
-              required
-            />
-            <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
-              <option value="2d">2D Chart</option>
-              <option value="3d">3D Chart</option>
-            </select>
-            <button type="submit">Upload</button>
+            <button type="submit">Upload File</button>
           </form>
+
+          {headers.length > 0 && (
+            <>
+              <h3>🧠 Select Chart Axes</h3>
+              <select value={xAxis} onChange={(e) => setXAxis(e.target.value)}>
+                <option value="">Select X-Axis</option>
+                {headers.map((header) => (
+                  <option key={header} value={header}>
+                    {header}
+                  </option>
+                ))}
+              </select>
+
+              <select value={yAxis} onChange={(e) => setYAxis(e.target.value)}>
+                <option value="">Select Y-Axis</option>
+                {headers.map((header) => (
+                  <option key={header} value={header}>
+                    {header}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={chartType}
+                onChange={(e) => setChartType(e.target.value)}
+              >
+                <option value="2d">2D Chart</option>
+                <option value="3d">3D Chart</option>
+              </select>
+
+              <button onClick={handleAnalyze}>Analyze Data</button>
+            </>
+          )}
+
           {status && <p className="upload-status">{status}</p>}
         </div>
       </div>

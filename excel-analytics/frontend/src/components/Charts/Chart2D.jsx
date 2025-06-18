@@ -3,7 +3,9 @@ import { Chart as ChartJS } from "chart.js/auto";
 
 export default function Chart2D({ data, xKey, yKey }) {
   if (!data?.length || !xKey || !yKey || !data[0][xKey] || !data[0][yKey]) {
-    return <p style={{ color: "red" }}>Invalid or missing data for 2D chart.</p>;
+    return (
+      <p style={{ color: "red" }}>Invalid or missing data for 2D chart.</p>
+    );
   }
 
   const chartData = {
@@ -21,7 +23,12 @@ export default function Chart2D({ data, xKey, yKey }) {
   };
 
   return (
-    <div style={{ width: "100%", height: "400px" }}>
+    <div
+      style={{
+        width: "100%",
+        height: "400px",
+      }}
+    >
       <Line data={chartData} />
     </div>
   );

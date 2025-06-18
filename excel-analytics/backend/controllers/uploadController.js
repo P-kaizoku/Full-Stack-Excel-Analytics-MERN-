@@ -15,7 +15,18 @@ exports.uploadExcel = async (req, res) => {
     const { xAxis, yAxis, chartType } = req.body;
     const workbook = XLSX.readFile(req.file.path);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const jsonData = XLSX.utils.sheet_to_json(sheet);
+    let rawData = XLSX.utils.sheet_to_json(sheet);
+    let jsonData = rawData.map((row) => {
+      const cleanedRow = {};
+      for (let key in row) {
+        cleanedRow[key.trim()] = row[key];
+      }
+      return cleanedRow;
+    });
+
+    const headers = Object.keys(jsonData[0] || {});
+
+    console.log("🧹 Cleaned JSON data preview:", jsonData[0]);
 
     const upload = new Upload({
       userId: req.user.id,
@@ -28,7 +39,7 @@ exports.uploadExcel = async (req, res) => {
     await upload.save();
     fs.unlinkSync(req.file.path); // Clean up the temp file
 
-    res.json({ message: "Upload successful", data: jsonData });
+    res.json({ message: "Upload successful", data: jsonData, headers });
   } catch (error) {
     console.error("❌ Upload failed:", error);
     res.status(500).json({ message: "Upload failed", error: error.message });

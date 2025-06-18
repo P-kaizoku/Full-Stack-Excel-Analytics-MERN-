@@ -26,7 +26,7 @@ export default function Upload() {
         localStorage.removeItem("token");
         navigate("/login");
       });
-  }, [navigate]);
+  }, []);
 
   if (!user) return <div>Loading...</div>;
 
@@ -65,7 +65,10 @@ export default function Upload() {
         <section className="welcome-container">
           <div className="welcome-card">
             <h2>Welcome {user.name}!</h2>
-            <p>You have successfully logged in. Your analytics and uploads will appear here.</p>
+            <p>
+              You have successfully logged in. Your analytics and uploads will
+              appear here.
+            </p>
           </div>
         </section>
 

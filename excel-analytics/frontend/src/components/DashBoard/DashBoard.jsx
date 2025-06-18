@@ -4,14 +4,29 @@ import * as XLSX from "xlsx";
 import "./Dashboard.css";
 import Chart2D from "../Charts/Chart2D";
 import Chart3D from "../Charts/Chart3D";
+import { logout } from "../../services/auth";
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const [xKey, setXKey] = useState("");
   const [yKey, setYKey] = useState("");
+  const [user, setUser] = useState(null);
+
   const [showCharts, setShowCharts] = useState(false);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     const canvas = document.getElementById("matrix-canvas");
@@ -61,7 +76,7 @@ export default function Dashboard() {
           <ul>
             <li>🖥️ Dashboard</li>
             <li onClick={handleUploadRedirect}>📥 Upload Excel</li>
-            <li>📊 Analyze Data</li>
+            <li onClick={() => navigate("/analyze")}>📊 Analyze Data</li>
             <li>🕒 History</li>
             <li>🤖 Ai Insights</li>
             <li>💬 Chat with file</li>
@@ -74,15 +89,24 @@ export default function Dashboard() {
         <div className="top-bar">
           <h1>Dashboard</h1>
           <div className="top-bar-right">
-            <div className="profile">👤 Priyanshu</div>
-            <button className="logout-btn">Logout</button>
+            <div className="profile">👤 {user?.name || "User"}</div>
+            <button
+              className="logout-btn"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              Logout
+            </button>
           </div>
         </div>
 
         <div className="welcome-section">
           <h2 className="animated-heading-sky">Visualize your Data with us</h2>
           <p className="animated-subtext-sky">
-            Upload, visualize, and transform your spreadsheets into interactive charts and reports with just a few clicks.
+            Upload, visualize, and transform your spreadsheets into interactive
+            charts and reports with just a few clicks.
           </p>
           <p className="animated-subtext-sky">
             Welcome to your own platform — <strong>Visualxcel</strong>
@@ -90,7 +114,9 @@ export default function Dashboard() {
         </div>
 
         <div className="card-grid square-grid compact">
-          <div className="feature-card" onClick={handleUploadRedirect}>📥 Upload Excel</div>
+          <div className="feature-card" onClick={handleUploadRedirect}>
+            📥 Upload Excel
+          </div>
           <div className="feature-card">🖥️ Dashboard</div>
           <div className="feature-card">📊 Analyze Data</div>
           <div className="feature-card">🕒 History</div>

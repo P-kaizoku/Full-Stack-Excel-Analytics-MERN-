@@ -1,3 +1,4 @@
+import { login } from "../../services/auth.js";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
@@ -17,8 +18,14 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // 🚨 Force redirect without checking login response
-    navigate("/dashboard");
+
+    const res = await login({ email, password });
+
+    if (res.success) {
+      navigate("/dashboard");
+    } else {
+      alert(res.message);
+    }
   };
 
   const content = {
@@ -41,7 +48,10 @@ export default function Login() {
       <nav className="navbar">
         <div className="navbar-left">🟩📊 Excel Analytics Platform</div>
         <div className="navbar-right">
-          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
             <option value="en">English (United States)</option>
             <option value="es">Español</option>
             <option value="fr">Français</option>
@@ -51,8 +61,15 @@ export default function Login() {
           <button onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? "Light" : "Dark"}
           </button>
-          <button className="nav-btn" onClick={() => navigate("/login")}>Log in</button>
-          <button className="nav-btn signup" onClick={() => navigate("/register")}>Sign up</button>
+          <button className="nav-btn" onClick={() => navigate("/login")}>
+            Log in
+          </button>
+          <button
+            className="nav-btn signup"
+            onClick={() => navigate("/register")}
+          >
+            Sign up
+          </button>
         </div>
       </nav>
 
