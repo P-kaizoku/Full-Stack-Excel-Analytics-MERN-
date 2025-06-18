@@ -4,7 +4,7 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Dashboard from "./components/DashBoard/DashBoard";
 import UploadForm from "./components/Upload/UploadForm";
-import AnalyzeData from "./AnalyzeData/AnalyzeData";
+import AnalyzeData from "./components/AnalyzeData/AnalyzeData";
 import NotFound from "./components/NotFound/NotFound";
 
 const App = () => (

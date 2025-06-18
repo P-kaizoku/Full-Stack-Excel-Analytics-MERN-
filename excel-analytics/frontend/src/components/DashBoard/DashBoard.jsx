@@ -118,7 +118,9 @@ export default function Dashboard() {
             📥 Upload Excel
           </div>
           <div className="feature-card">🖥️ Dashboard</div>
-          <div className="feature-card">📊 Analyze Data</div>
+          <div onClick={() => navigate("/analyze")} className="feature-card">
+            📊 Analyze Data
+          </div>
           <div className="feature-card">🕒 History</div>
           <div className="feature-card">🤖 Ai Insights</div>
           <div className="feature-card">💬 Chat with file</div>
