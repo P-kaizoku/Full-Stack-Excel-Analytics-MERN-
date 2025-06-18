@@ -5,6 +5,7 @@ import Register from "./components/Auth/Register";
 import Dashboard from "./components/DashBoard/DashBoard";
 import UploadForm from "./components/Upload/UploadForm";
 import AnalyzeData from "./AnalyzeData/AnalyzeData";
+import NotFound from "./components/NotFound/NotFound";
 
 const App = () => (
   <BrowserRouter>
@@ -15,6 +16,7 @@ const App = () => (
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/upload" element={<UploadForm />} />
       <Route path="/analyze" element={<AnalyzeData />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
 );
