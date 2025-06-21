@@ -77,7 +77,7 @@ export default function Dashboard() {
             <li>🖥️ Dashboard</li>
             <li onClick={handleUploadRedirect}>📥 Upload Excel</li>
             <li onClick={() => navigate("/analyze")}>📊 Analyze Data</li>
-            <li>🕒 History</li>
+            <li onClick={() => navigate("/history")}>🕒 History</li>
             <li>🤖 Ai Insights</li>
             <li>💬 Chat with file</li>
             <li>⚙️ Settings</li>
@@ -121,7 +121,9 @@ export default function Dashboard() {
           <div onClick={() => navigate("/analyze")} className="feature-card">
             📊 Analyze Data
           </div>
-          <div className="feature-card">🕒 History</div>
+          <div onClick={() => navigate("/history")} className="feature-card">
+            🕒 History
+          </div>
           <div className="feature-card">🤖 Ai Insights</div>
           <div className="feature-card">💬 Chat with file</div>
           <div className="feature-card">⚙️ Settings</div>

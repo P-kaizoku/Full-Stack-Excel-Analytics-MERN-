@@ -1,0 +1,32 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  max-width: 1000px;
+  margin-right: auto;
+  margin-left: auto;
+  color: white;
+  background-color: rgba(30, 30, 30, 0.61);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(133, 133, 133, 0.2);
+}
+
+.navbar-left {
+  font-size: 26px;
+  font-family: "poppins", sans-serif;
+  font-weight: 900;
+}
+
+.navbar-right {
+  display: flex;
+  gap: 20px;
+}
+.navbar-right button {
+  background-color: transparent;
+  font-size: 14px;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}

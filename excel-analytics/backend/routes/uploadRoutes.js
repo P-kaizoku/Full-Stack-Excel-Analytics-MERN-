@@ -38,8 +38,14 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 // Routes
-router.post("/", authMiddleware, upload.single("file"), uploadController.uploadExcel);
+router.post(
+  "/",
+  authMiddleware,
+  upload.single("file"),
+  uploadController.uploadExcel
+);
 router.get("/", authMiddleware, uploadController.getUserUploads);
 router.get("/stats", uploadController.getStats);
+router.get("/history", authMiddleware, uploadController.getUserUploads);
 
 module.exports = router;

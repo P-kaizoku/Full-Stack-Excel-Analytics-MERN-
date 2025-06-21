@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Chart2D from "../Charts/Chart2D";
 import Chart3D from "../Charts/Chart3D";
 
@@ -10,6 +11,8 @@ export default function AnalyzeData() {
   const [yKey, setYKey] = useState("");
   const [headers, setHeaders] = useState([]);
   const [chartType, setChartType] = useState("2d"); // "2d" or "3d"
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -41,7 +44,10 @@ export default function AnalyzeData() {
 
   return (
     <div className="analyze-container">
-      <h1>📊 Analyze Data</h1>
+      <div className="analyze-header">
+        <h1>📊 Analyze Data</h1>
+        <button onClick={() => navigate("/dashboard")}>Dashboard ➡️</button>
+      </div>
 
       {data.length > 0 ? (
         <>

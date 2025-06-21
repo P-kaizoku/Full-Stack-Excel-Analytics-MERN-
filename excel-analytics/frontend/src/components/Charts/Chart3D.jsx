@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 export default function Chart3D({ data, xKey, yKey }) {
   const ref = useRef();
+  const rendererRef = useRef(); // track renderer
+  const [isReady, setIsReady] = useState(false); // to avoid rendering before canvas
 
   useEffect(() => {
     const mount = ref.current;
@@ -20,7 +22,6 @@ export default function Chart3D({ data, xKey, yKey }) {
     const width = 600;
     const height = 500;
 
-    // Setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
 
@@ -28,12 +29,15 @@ export default function Chart3D({ data, xKey, yKey }) {
     camera.position.set(5, 5, 5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true,
+    });
     renderer.setSize(width, height);
-    mount.innerHTML = ""; // clear previous render
+    rendererRef.current = renderer;
+    mount.innerHTML = "";
     mount.appendChild(renderer.domElement);
 
-    // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -41,16 +45,12 @@ export default function Chart3D({ data, xKey, yKey }) {
     controls.minDistance = 2;
     controls.maxDistance = 20;
 
-    // Lights
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(2, 5, 5);
     scene.add(light);
     scene.add(new THREE.AmbientLight(0x404040));
-
-    // Grid
     scene.add(new THREE.GridHelper(10, 10));
 
-    // Normalize and slice data
     const yValues = data.map((d) => Number(d[yKey])).filter((n) => !isNaN(n));
     const maxY = Math.max(...yValues, 1);
     const barSpacing = 0.6;
@@ -76,13 +76,14 @@ export default function Chart3D({ data, xKey, yKey }) {
       scene.add(cube);
     });
 
-    // Animate with user interactivity
     const animate = () => {
       requestAnimationFrame(animate);
-      controls.update(); // required for damping
+      controls.update();
       renderer.render(scene, camera);
     };
+
     animate();
+    setIsReady(true); // canvas is ready
 
     return () => {
       controls.dispose();
@@ -93,10 +94,45 @@ export default function Chart3D({ data, xKey, yKey }) {
     };
   }, [data, xKey, yKey]);
 
+  const downloadImage = () => {
+    const renderer = rendererRef.current;
+    if (!renderer) return;
+
+    const dataURL = renderer.domElement.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.download = "3d_chart.png";
+    link.href = dataURL;
+    link.click();
+  };
+
   return (
-    <div
-      ref={ref}
-      style={{ width: "100%", height: "400px", overflow: "hidden" }}
-    />
+    <div>
+      <div
+        ref={ref}
+        style={{
+          width: "100%",
+          height: "400px",
+          overflow: "hidden",
+          borderRadius: "10px",
+        }}
+      />
+      {isReady && (
+        <button
+          onClick={downloadImage}
+          style={{
+            marginTop: "10px",
+            padding: "10px 20px",
+            border: "none",
+            background: "#3b82f6",
+            color: "white",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          ⬇️
+        </button>
+      )}
+    </div>
   );
 }

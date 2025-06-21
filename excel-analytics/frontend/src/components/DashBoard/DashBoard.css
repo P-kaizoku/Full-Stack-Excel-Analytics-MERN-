@@ -35,7 +35,8 @@ html {
 
 /* Sidebar */
 .sidebar {
-  width: 240px;
+  width: fit-content;
+
   background: rgba(15, 23, 42, 0.95);
   padding: 24px;
   display: flex;
@@ -52,6 +53,16 @@ html {
   margin-bottom: 40px;
   color: #38bdf8;
   letter-spacing: 1px;
+}
+
+.sidebar nav {
+  background-color: hsl(0, 0%, 5%);
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(112, 112, 112, 0.1);
+  margin-bottom: 24px;
+  backdrop-filter: blur(6px);
+  border: 1px solid #334155;
 }
 
 .sidebar nav ul {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UploadForm.css";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadForm() {
   const [file, setFile] = useState(null);
@@ -10,6 +11,8 @@ export default function UploadForm() {
   const [status, setStatus] = useState("");
   const [headers, setHeaders] = useState([]);
   const [cleanedData, setCleanedData] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const canvas = document.getElementById("matrix-canvas");
@@ -76,8 +79,23 @@ export default function UploadForm() {
       setHeaders(Object.keys(cleaned[0] || []));
       setStatus("✅ File uploaded. Now choose X & Y axes.");
     } catch (err) {
+      if (err.response?.status === 400) {
+        // Reset state if file already exists
+        setStatus("📂 File already exists. Redirecting to dashboard...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setFile(null);
+        navigate("/dashboard");
+        return;
+      }
       console.error("Upload Error:", err.response?.data || err.message);
-      setStatus("❌ Upload failed.");
+      setStatus("❌ Upload failed. Please try again.");
+
+      setCleanedData([]);
+      setHeaders([]);
+      setXAxis("");
+      setYAxis("");
+      setChartType("2d");
+      setFile(null);
     }
   };
 
@@ -106,11 +124,6 @@ export default function UploadForm() {
       <canvas id="matrix-canvas" className="matrix-background"></canvas>
 
       <div className="form-content">
-        <div className="upload-description floating-text">
-          Upload, visualize, and transform your spreadsheets into interactive
-          charts and reports with just a few clicks.
-        </div>
-
         <div className="upload-card user-history">
           <h2>📂 Upload Excel File</h2>
 

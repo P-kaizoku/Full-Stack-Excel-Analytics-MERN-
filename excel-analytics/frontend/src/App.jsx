@@ -6,6 +6,7 @@ import Dashboard from "./components/DashBoard/DashBoard";
 import UploadForm from "./components/Upload/UploadForm";
 import AnalyzeData from "./components/AnalyzeData/AnalyzeData";
 import NotFound from "./components/NotFound/NotFound";
+import UserHistory from "./components/DashBoard/UserHistory";
 
 const App = () => (
   <BrowserRouter>
@@ -17,6 +18,7 @@ const App = () => (
       <Route path="/upload" element={<UploadForm />} />
       <Route path="/analyze" element={<AnalyzeData />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/history" element={<UserHistory />} />
     </Routes>
   </BrowserRouter>
 );

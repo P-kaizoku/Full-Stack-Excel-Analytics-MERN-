@@ -28,6 +28,16 @@ exports.uploadExcel = async (req, res) => {
 
     console.log("🧹 Cleaned JSON data preview:", jsonData[0]);
 
+    const existingUpload = await Upload.findOne({
+      userId: req.user.id,
+      fileName: req.file.originalname,
+    });
+    if (existingUpload) {
+      console.log("📂 File already exists for this user");
+      return res.status(400).json({ message: "File already uploaded" });
+    }
+    console.log("📂 File is new, proceeding with upload");
+
     const upload = new Upload({
       userId: req.user.id,
       fileName: req.file.originalname,
