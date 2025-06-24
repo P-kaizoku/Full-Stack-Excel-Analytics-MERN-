@@ -7,11 +7,12 @@ import UploadForm from "./components/Upload/UploadForm";
 import AnalyzeData from "./components/AnalyzeData/AnalyzeData";
 import NotFound from "./components/NotFound/NotFound";
 import UserHistory from "./components/DashBoard/UserHistory";
+import Hero from "./components/Hero/Hero";
 
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Hero />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
